@@ -19,12 +19,50 @@ class App extends Component {
         title: 'Study State',
         completed: false,
       },
+      {
+        id: 4,
+        title: 'Practice Code',
+        completed: false,
+      },
+      {
+        id: 5,
+        title: 'Eat Dinner',
+        completed: false,
+      },
+      {
+        id: 6,
+        title: 'Sleep',
+        completed: false,
+      },
     ],
+  };
+
+  // Toggle Complete
+  markComplete = (id) => {
+    this.setState({
+      todos: this.state.todos.map((todo) => {
+        if (todo.id === id) {
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      }),
+    });
+  };
+
+  //Delete Todo
+  delTodo = (id) => {
+    this.setState({
+      todos: [...this.state.todos.filter((todo) => todo.id !== id)],
+    });
   };
   render() {
     return (
       <div className="App">
-        <Todos todos={this.state.todos} />
+        <Todos
+          todos={this.state.todos}
+          markComplete={this.markComplete}
+          delTodo={this.delTodo}
+        />
       </div>
     );
   }
