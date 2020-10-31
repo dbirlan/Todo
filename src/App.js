@@ -6,43 +6,19 @@ import Header from './components/layout/Header';
 import AddTodo from './components/addTodo';
 import About from './components/pages/About';
 import './App.css';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+import Axios from 'axios';
 
 class App extends Component {
   state = {
-    todos: [
-      {
-        id: uuidv4(),
-        title: 'Study File Structure',
-        completed: false,
-      },
-      {
-        id: 2,
-        title: 'Create Component',
-        completed: false,
-      },
-      {
-        id: 3,
-        title: 'Study State',
-        completed: false,
-      },
-      {
-        id: 4,
-        title: 'Practice Code',
-        completed: false,
-      },
-      {
-        id: 5,
-        title: 'Eat Dinner',
-        completed: false,
-      },
-      {
-        id: 6,
-        title: 'Sleep',
-        completed: false,
-      },
-    ],
+    todos: [],
   };
+
+  componentDidMount() {
+    Axios.get(
+      'https://jsonplaceholder.typicode.com/todos?_limit=10'
+    ).then((res) => this.setState({ todos: res.data }));
+  }
 
   // Toggle Complete
   markComplete = (id) => {
@@ -58,19 +34,19 @@ class App extends Component {
 
   //Delete Todo
   delTodo = (id) => {
-    this.setState({
+    Axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    .then(res=> this.setState({
       todos: [...this.state.todos.filter((todo) => todo.id !== id)],
-    });
+    }));
+    
   };
 
   //Add Todo
   addTodo = (title) => {
-    const newTodo = {
-      id: uuidv4(),
+    Axios.post('https://jsonplaceholder.typicode.com/todos', {
       title,
       completed: false,
-    };
-    this.setState({ todos: [...this.state.todos, newTodo] });
+    }).then((res) => this.setState({ todos: [...this.state.todos, res.data] }));
   };
   render() {
     return (
@@ -78,7 +54,8 @@ class App extends Component {
         <div className="App">
           <div className="container">
             <Header />
-            <Route exact
+            <Route
+              exact
               path="/"
               render={(props) => (
                 <React.Fragment>
